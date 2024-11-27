@@ -1,12 +1,20 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:english_learning_app/models/lesson_model.dart';
 import 'package:english_learning_app/models/vocabulary_model.dart';
+import 'package:english_learning_app/view_model/lesson_viewmodel.dart';
 import 'package:english_learning_app/views/widget/dialog/show_practice_dialog.dart';
 import 'package:english_learning_app/views/widget/dialog/show_result_practice_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Practice1Viewmodel extends ChangeNotifier {
   final List<VocabularyModel> _vocabList;
+  final LessonViewModel lessonViewModel = LessonViewModel();
+  final int courseID;
+  final int lessionID;
+  final double oldProgress;
+
 
   List<VocabularyModel> _remainingWords = [];
   VocabularyModel? _currentWord;
@@ -17,9 +25,12 @@ class Practice1Viewmodel extends ChangeNotifier {
   Color _targetColor = Colors.lightBlueAccent;
   String _feedbackText = "";
 
-  Practice1Viewmodel(this._vocabList){
+
+  Practice1Viewmodel(
+      this._vocabList, this.courseID, this.lessionID, this.oldProgress){
     _resetQuiz();
   }
+
 
   // Các getter để truy cập từ View
   int get score => _score;
@@ -94,6 +105,13 @@ class Practice1Viewmodel extends ChangeNotifier {
     double completionRate = (score / _vocabList.length) * 100;
     bool isCompleted = completionRate >= 80;
     // Hiển thị dialog kết quả
+    double completionProgress = min(completionRate, 25);
+
+
+    double newProgress = oldProgress + completionProgress;
+    if(newProgress > 100){
+      newProgress = 100;
+    }
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -104,8 +122,9 @@ class Practice1Viewmodel extends ChangeNotifier {
           Navigator.of(context).pop();
           _resetQuiz(); // Khởi động lại bài luyện tập
         },
-        onComplete: () {
-          Navigator.of(context).pop(); // Đóng dialog
+        onComplete: () async {
+          await lessonViewModel.updateProcess(courseID, lessionID, newProgress);
+          Navigator.of(context).pop(); // Đóng PracticeScreen
           Navigator.of(context).pop(); // Đóng PracticeScreen
 
 

@@ -20,6 +20,10 @@ class _LessonListTabState extends State<LessonListTab> {
   @override
   void initState() {
     super.initState();
+    _loadLessons();
+  }
+
+  void _loadLessons() {
     Future.microtask(() => Provider.of<LessonViewModel>(context, listen: false)
         .fetchLessons(widget.courseID));
   }
@@ -45,7 +49,10 @@ class _LessonListTabState extends State<LessonListTab> {
                             builder: (context) =>
                                 LessonScreen(lessonViewModel.lessons[index]),
                           ),
-                        );
+                        ).then((_) {
+                          // Khi quay lại màn hình, tải lại dữ liệu
+                          _loadLessons();
+                        });
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
@@ -86,9 +93,9 @@ class _LessonListTabState extends State<LessonListTab> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text('${lesson.proccess}%'),
+                            Text('${lesson.progress}%'),
                             LinearProgressIndicator(
-                              value: lesson.proccess / 100,
+                              value: lesson.progress / 100,
                               minHeight: 4,
                               backgroundColor: Colors.grey[300],
                               color: Color(0xFF342771),

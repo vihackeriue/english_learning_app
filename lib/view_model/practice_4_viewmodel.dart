@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:english_learning_app/view_model/lesson_viewmodel.dart';
 import 'package:english_learning_app/views/widget/dialog/show_result_practice_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:english_learning_app/models/vocabulary_model.dart';
 
 class Practice4ViewModel extends ChangeNotifier {
-  final List<VocabularyModel> _vocabList = VocabularyModel.vocabList;
+  final List<VocabularyModel> _vocabList;
+  final LessonViewModel lessonViewModel = LessonViewModel();
+  final int courseID;
+  final int lessionID;
+  final double oldProgress;
+
   int _currentIndex = 0;
   int _score = 0;
   String _feedbackText = "";
@@ -14,6 +21,12 @@ class Practice4ViewModel extends ChangeNotifier {
   VocabularyModel get currentWord => _vocabList[_currentIndex];
   String get feedbackText => _feedbackText;
   int get currentIndex => _currentIndex;
+
+
+  Practice4ViewModel(
+      this._vocabList, this.courseID, this.lessionID, this.oldProgress){
+   resetQuiz();
+  }
 
   void checkAnswer(String userAnswer, BuildContext context) {
     if (userAnswer.trim().toLowerCase() == currentWord.word.toLowerCase()) {
@@ -42,6 +55,14 @@ class Practice4ViewModel extends ChangeNotifier {
   void _showResult(BuildContext context) {
     double completionRate = (score / _vocabList.length) * 100;
     bool isCompleted = completionRate >= 80;
+    // Hiển thị dialog kết quả
+    double completionProgress = min(completionRate, 25);
+
+
+    double newProgress = oldProgress + completionProgress;
+    if(newProgress > 100){
+      newProgress = 100;
+    }
 
     // Hiển thị kết quả
     showDialog(
@@ -54,7 +75,9 @@ class Practice4ViewModel extends ChangeNotifier {
           Navigator.of(context).pop();
           resetQuiz();
         },
-        onComplete: () {
+        onComplete: () async {
+          await lessonViewModel.updateProcess(courseID, lessionID, newProgress);
+
           Navigator.of(context).pop(); // Đóng dialog
           Navigator.of(context).pop(); // Đóng PracticeScreen2
         },

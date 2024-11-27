@@ -27,10 +27,10 @@ class MyCourseViewmodel extends ChangeNotifier {
         throw Exception("Token không tồn tại");
       }
       final response = await http.get(
-        Uri.parse("${apiUrl}/user-Courses/me"),
+        Uri.parse("${apiUrl}/user-courses/me"),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${tokenTest}',
+          'Authorization': 'Bearer $token',
         },
       );
       if (response.statusCode == 200) {
@@ -62,10 +62,10 @@ class MyCourseViewmodel extends ChangeNotifier {
         throw Exception("Token không tồn tại");
       }
       final response = await http.get(
-        Uri.parse("${apiUrl}/courses/current-user"),
+        Uri.parse("${apiUrl}/courses/all-course-by-user"),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${tokenTest}',
+          'Authorization': 'Bearer $token',
         },
       );
       if (response.statusCode == 200) {

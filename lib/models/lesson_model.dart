@@ -6,7 +6,7 @@ class LessonModel {
   final String attachments;
   final int level;
   final int courseID;
-  final double proccess;
+  late final double progress;
 
   LessonModel(
       {required this.lessonID,
@@ -15,7 +15,7 @@ class LessonModel {
       required this.attachments,
       required this.level,
       required this.courseID,
-      required this.proccess
+      required this.progress
       });
   factory LessonModel.fromJson(Map<String, dynamic> json){
     return LessonModel(
@@ -25,7 +25,7 @@ class LessonModel {
         attachments: json['attachments'] as String,
         level: json['level'] as int,
         courseID: json['courseId'] as int,
-        proccess: json['progress'] as double
+        progress: json['progress'] as double
     );
   }
   static List<LessonModel> englishLessons = [
@@ -36,7 +36,7 @@ class LessonModel {
         attachments: "assets/images/image1.jpg",
         level: 1,
         courseID: 101,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 2,
         lessonName: "English Alphabet",
@@ -44,7 +44,7 @@ class LessonModel {
         attachments: "assets/images/image2.jpg",
         level: 1,
         courseID: 101,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 3,
         lessonName: "Basic Grammar",
@@ -52,7 +52,7 @@ class LessonModel {
         attachments: "assets/images/image3.jpg",
         level: 2,
         courseID: 101,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 4,
         lessonName: "Simple Conversations",
@@ -60,7 +60,7 @@ class LessonModel {
         attachments: "assets/images/image4.jpg",
         level: 2,
         courseID: 101,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 5,
         lessonName: "Intermediate Vocabulary",
@@ -68,7 +68,7 @@ class LessonModel {
         attachments: "assets/images/image5.jpg",
         level: 3,
         courseID: 102,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 6,
         lessonName: "Reading Comprehension",
@@ -76,7 +76,7 @@ class LessonModel {
         attachments: "assets/images/image6.jpg",
         level: 3,
         courseID: 102,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 7,
         lessonName: "Advanced Grammar",
@@ -84,7 +84,7 @@ class LessonModel {
         attachments: "assets/images/image7.jpg",
         level: 4,
         courseID: 103,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 8,
         lessonName: "Writing Skills",
@@ -92,7 +92,7 @@ class LessonModel {
         attachments: "assets/images/image8.jpg",
         level: 4,
         courseID: 103,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 9,
         lessonName: "Listening Practice",
@@ -100,7 +100,7 @@ class LessonModel {
         attachments: "assets/images/image9.jpg",
         level: 3,
         courseID: 102,
-        proccess: 0.0),
+        progress: 0.0),
     LessonModel(
         lessonID: 10,
         lessonName: "Business English",
@@ -108,6 +108,6 @@ class LessonModel {
         attachments: "assets/images/image10.jpg",
         level: 5,
         courseID: 104,
-        proccess: 0.0),
+        progress: 0.0),
   ];
 }

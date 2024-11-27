@@ -1,4 +1,5 @@
 import 'package:english_learning_app/constrants/app_colors.dart';
+import 'package:english_learning_app/models/vocabulary_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart'; // Thêm thư viện lottie
@@ -6,11 +7,19 @@ import 'package:english_learning_app/view_model/practice_4_viewmodel.dart';
 
 class Practice4Screen extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
+  final List<VocabularyModel> _vocabList;
+  final int courseID;
+  final int lessonID;
+  final double old_process;
+
+
+  Practice4Screen(
+      this._vocabList, this.courseID, this.lessonID, this.old_process);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => Practice4ViewModel(),
+      create: (_) => Practice4ViewModel(_vocabList, courseID, lessonID, old_process),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Bài luyện tập số 4', style: TextStyle(color: AppColors.lightGray.withOpacity(0.8)),),

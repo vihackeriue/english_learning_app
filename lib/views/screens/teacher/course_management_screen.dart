@@ -135,8 +135,8 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AppBar(
-                  title: Text('Thêm Khóa Học'),
-                  backgroundColor: Colors.deepPurple,
+                  title: Text('Thêm Khóa Học', style: TextStyle(color: AppColors.lightGray),),
+                  backgroundColor: AppColors.darkBlueBlack,
                   automaticallyImplyLeading: false,
                 ),
                 Padding(
@@ -226,7 +226,14 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                           // Đóng dialog sau khi lưu
                           Navigator.pop(context);
                         },
-                        child: Text('Lưu'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.deepPurpleBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                        ),
+                        child: Text('Lưu', style: TextStyle(color: AppColors.brightOrange),),
                       ),
                     ],
                   ),

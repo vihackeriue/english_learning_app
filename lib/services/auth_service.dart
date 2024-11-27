@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:english_learning_app/constrants/app_constrants.dart';
+import 'package:english_learning_app/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,5 +71,24 @@ class AuthService {
     }
 
     // Bạn có thể thực hiện thêm các bước khác như điều hướng về trang đăng nhập
+  }
+  Future<bool> registerUser(UserModel user) async {
+
+    try {
+      final response = await http.post(
+        Uri.parse("${apiUrl}/auth/register"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(user.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final error = jsonDecode(response.body)["message"];
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -8,11 +8,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PracticeDialog extends StatefulWidget {
-  final double progress;
+  final double oldProgress;
   final List<VocabularyModel> vocabList;
+  final int courseID;
+  final int lessonID;
 
 
-  PracticeDialog(this.progress,this.vocabList);
+  PracticeDialog(
+      this.oldProgress, this.vocabList, this.courseID, this.lessonID);
 
   @override
   _PracticeDialogState createState() => _PracticeDialogState();
@@ -29,10 +32,10 @@ class _PracticeDialogState extends State<PracticeDialog> {
 
   void _initializeExercises() {
     practiceExercises = [
-      {"title": "Bài 1", "isComplete": widget.progress >= 20},
-      {"title": "Bài 2", "isComplete": widget.progress >= 40},
-      {"title": "Bài 3", "isComplete": widget.progress >= 60},
-      {"title": "Bài 4", "isComplete": widget.progress >= 80},
+      {"title": "Bài 1", "isComplete": widget.oldProgress >= 20},
+      {"title": "Bài 2", "isComplete": widget.oldProgress >= 40},
+      {"title": "Bài 3", "isComplete": widget.oldProgress >= 60},
+      {"title": "Bài 4", "isComplete": widget.oldProgress >= 85},
     ];
   }
 
@@ -43,22 +46,22 @@ class _PracticeDialogState extends State<PracticeDialog> {
     if (index == 0) {
       newProgress = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Practice1Screen(widget.vocabList)),
+        MaterialPageRoute(builder: (context) => Practice1Screen(widget.vocabList, widget.courseID, widget.lessonID, widget.oldProgress)),
       );
     } else if (index == 1) {
       newProgress = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Practice2Screen()),
+        MaterialPageRoute(builder: (context) => Practice2Screen(widget.vocabList, widget.courseID, widget.lessonID, widget.oldProgress)),
       );
     } else if (index == 2) {
       newProgress = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Practice3Screen()),
+        MaterialPageRoute(builder: (context) => Practice3Screen(widget.vocabList, widget.courseID, widget.lessonID, widget.oldProgress)),
       );
     } else if (index == 3) {
       newProgress = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Practice4Screen()),
+        MaterialPageRoute(builder: (context) => Practice4Screen(widget.vocabList, widget.courseID, widget.lessonID, widget.oldProgress)),
       );
     }
   }
@@ -142,7 +145,7 @@ class _PracticeDialogState extends State<PracticeDialog> {
                             IconButton(
                               icon: Icon(
                                 isComplete
-                                    ? Icons.refresh
+                                    ? widget.oldProgress >= 80 ? Icons.refresh : Icons.check_circle
                                     : isCurrent
                                     ? Icons.play_circle_fill
                                     : Icons.lock,
@@ -153,12 +156,15 @@ class _PracticeDialogState extends State<PracticeDialog> {
                                     : Colors.grey,
                               ),
                               onPressed: canPractice
-                                  ? () => _navigateToPracticeScreen(context, index)
-                                  : null,
+                                  ? (widget.oldProgress > 80 || !isComplete)
+                                    ? () => _navigateToPracticeScreen(context, index)
+                                    : null
+                                  :null,
                             ),
                           ],
                         ),
                       ),
+
                       if (index < practiceExercises.length - 1)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),

@@ -1,4 +1,5 @@
 import 'package:english_learning_app/constrants/app_colors.dart';
+import 'package:english_learning_app/models/vocabulary_model.dart';
 import 'package:english_learning_app/view_model/practice_3_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -6,10 +7,19 @@ import 'package:provider/provider.dart';
 
 
 class Practice3Screen extends StatelessWidget {
+  final List<VocabularyModel> _vocabList;
+  final int courseID;
+  final int lessonID;
+  final double old_process;
+
+
+  Practice3Screen(
+      this._vocabList, this.courseID, this.lessonID, this.old_process);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => Practice3ViewModel(),
+      create: (context) => Practice3ViewModel(_vocabList, courseID, lessonID, old_process),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Bài luyện tập số 3', style: TextStyle(color: AppColors.lightGray.withOpacity(0.8)),),
@@ -25,7 +35,7 @@ class Practice3Screen extends StatelessWidget {
             final currentWord = viewModel.currentQuestion.word;
             final currentMeaning = viewModel.currentQuestion.meaning;
             final shuffledLetters = viewModel.shuffledLetters;
-            double progress = (viewModel.currentQuestionIndex + 1) / viewModel.vocabularyList.length;
+            double progress = (viewModel.currentQuestionIndex + 1) / viewModel.vocabList.length;
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -39,7 +49,7 @@ class Practice3Screen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Câu ${viewModel.currentQuestionIndex + 1}/${viewModel.vocabularyList.length}',
+                    'Câu ${viewModel.currentQuestionIndex + 1}/${viewModel.vocabList.length}',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),

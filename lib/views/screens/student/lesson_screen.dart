@@ -7,6 +7,7 @@ import 'package:english_learning_app/views/widget/dialog/show_practice_dialog.da
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LessonScreen extends StatefulWidget {
   final LessonModel lesson;
@@ -21,8 +22,9 @@ class _LessonDetailScreenState extends State<LessonScreen> {
 // Các biến lưu dữ liệu của bài học
   late LessonModel lesson = widget.lesson;
 
+
   @override
-  void initState() {
+  void initState()  {
     super.initState();
     Future.microtask(() =>
         Provider.of<VocabularyViewmodel>(context, listen: false)
@@ -35,6 +37,7 @@ class _LessonDetailScreenState extends State<LessonScreen> {
   @override
   Widget build(BuildContext context) {
     final vocabularyViewModel = Provider.of<VocabularyViewmodel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -43,6 +46,7 @@ class _LessonDetailScreenState extends State<LessonScreen> {
         ),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: AppColors.darkBlueBlack,
+
       ),
       backgroundColor: AppColors.backgroundColor,
       body: Padding(
@@ -123,11 +127,17 @@ class _LessonDetailScreenState extends State<LessonScreen> {
             Container(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async  {
+                  double progress = await Provider.of<LessonViewModel>(context, listen: false).fetchGetProgressByLesson(lesson.courseID, lesson.lessonID);
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PracticeDialog(lesson.proccess, vocabularyViewModel.vocabs);
+                      return PracticeDialog(
+                        progress,
+                        vocabularyViewModel.vocabs,
+                        lesson.courseID,
+                        lesson.lessonID,
+                      );
                     },
                   );
                 },

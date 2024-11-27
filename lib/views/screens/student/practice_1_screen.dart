@@ -8,14 +8,18 @@ import 'package:provider/provider.dart';
 
 class Practice1Screen extends StatelessWidget {
   final List<VocabularyModel> _vocabList;
+  final int courseID;
+  final int lessonID;
+  final double old_process;
 
 
-  Practice1Screen(this._vocabList);
+  Practice1Screen(
+      this._vocabList, this.courseID, this.lessonID, this.old_process);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => Practice1Viewmodel(_vocabList),
+      create: (_) => Practice1Viewmodel(_vocabList, courseID, lessonID, old_process),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Bài luyện tập số 1', style: TextStyle(color: AppColors.lightGray.withOpacity(0.8)),),

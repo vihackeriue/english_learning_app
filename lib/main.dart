@@ -10,7 +10,7 @@ import 'package:english_learning_app/views/screens/student/course_screen.dart';
 import 'package:english_learning_app/views/screens/login_screen.dart';
 import 'package:english_learning_app/views/screens/student/home_student_screen.dart';
 import 'package:english_learning_app/views/screens/student/my_vocabulary_screen.dart';
-import 'package:english_learning_app/views/screens/student/profile_screen.dart';
+import 'package:english_learning_app/views/screens/profile_screen.dart';
 import 'package:english_learning_app/views/screens/student/statistics_screen.dart';
 import 'package:english_learning_app/views/screens/student/translate_screen.dart';
 import 'package:english_learning_app/views/screens/teacher/course_management_screen.dart';
@@ -23,12 +23,11 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Practice2ViewModel()),
-        ChangeNotifierProvider(create: (_) => Practice3ViewModel()),
         ChangeNotifierProvider(create: (_) => TranslateViewModel()),
         ChangeNotifierProvider(create: (_) => MyCourseViewmodel()),
         ChangeNotifierProvider(create: (_) => LessonViewModel()),
         ChangeNotifierProvider(create: (_) => VocabularyViewmodel()),
+
 
         // Thêm các provider khác ở đây nếu có
       ],
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/student',
+      initialRoute: '/login',
       routes: {
         '/login': (context) => LoginScreen(),
         '/student': (context) => StudentNavigation(),

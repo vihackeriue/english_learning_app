@@ -3,6 +3,7 @@ import 'package:english_learning_app/view_model/login_viewmodel.dart';
 import 'package:english_learning_app/views/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -40,17 +41,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 100),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30, top: 10),
-                      child: Container(
-                          width: 70,
-                          height: 70,
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                          ),
-                          child: FlutterLogo()
+                    Center(
+                      child: Lottie.asset(
+                        'assets/animations/lesson.json',
+                        // Đảm bảo bạn đã thêm file JSON của Lottie trong thư mục assets
+                        height: 150,
+                        width: 150,
+                        repeat: true, // Lặp lại animation
+                        reverse: true,
                       ),
                     ),
                     Padding(
