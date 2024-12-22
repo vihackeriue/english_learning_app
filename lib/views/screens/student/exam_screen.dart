@@ -1,5 +1,7 @@
 import 'package:english_learning_app/constrants/app_colors.dart';
 import 'package:english_learning_app/models/exam_model.dart';
+import 'package:english_learning_app/models/question_model.dart';
+import 'package:english_learning_app/view_model/exam_detail_viewmodel.dart';
 import 'package:english_learning_app/view_model/exam_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +11,10 @@ import 'package:provider/provider.dart';
 class ExamScreen extends StatefulWidget {
   final ExamModel exam;
 
-  ExamScreen(this.exam);
+  final List<QuestionModel> questions;
+
+
+  ExamScreen(this.exam, this.questions);
 
   @override
   _ExamScreenState createState() => _ExamScreenState();
@@ -21,10 +26,11 @@ class _ExamScreenState extends State<ExamScreen> {
   @override
   void initState() {
     super.initState();
-    viewModel = ExamViewModel(widget.exam);
+    viewModel = ExamViewModel(widget.exam, widget.questions);
     viewModel.startCountdown(() {
       _onTimeUp();
     });
+
   }
   void _onTimeUp() {
     viewModel.calculateScore();
@@ -43,7 +49,14 @@ class _ExamScreenState extends State<ExamScreen> {
             child: Text('Hủy'),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () async {
+
+              viewModel.calculateScore();
+              ExamDetailViewmodel examDetailViewmodel = new ExamDetailViewmodel();
+              print(viewModel.totalScore);
+              await examDetailViewmodel.updateScore(widget.exam.examID, viewModel.totalScore, 1, '');
+              Navigator.pop(context, true);
+            },
             child: Text('Nộp bài'),
           ),
         ],
@@ -51,7 +64,7 @@ class _ExamScreenState extends State<ExamScreen> {
     );
 
     if (confirm) {
-      viewModel.calculateScore();
+
       _showResultDialog();
     }
   }
@@ -118,13 +131,13 @@ class _ExamScreenState extends State<ExamScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${index + 1}. ${question.questionContent}',
+                            '${index + 1}. ${question.content}',
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          ...question.answers.map(
+                          ...question.answerOptions.map(
                                 (answer) => RadioListTile<int>(
                               title: Text(answer.answerContent),
                               value: answer.answerID,

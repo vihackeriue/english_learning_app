@@ -1,12 +1,14 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:english_learning_app/constrants/app_constrants.dart';
 import 'package:english_learning_app/models/exam_model.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/question_model.dart';
 import '../models/answer_model.dart';
+import 'package:http/http.dart' as http;
 
 class ExamViewModel {
-  final List<QuestionModel> questions = QuestionModel.questions;
+  List<QuestionModel> questions = [];
   ExamModel exam;
   int currentPage = 0;
   final int questionsPerPage = 5;
@@ -15,10 +17,8 @@ class ExamViewModel {
   Map<int, int> selectedAnswers = {}; // Lưu ID của đáp án được chọn
   double totalScore = 0.0;
 
-
-
-  ExamViewModel(this.exam){
-    countdownTime = exam.examTime;
+  ExamViewModel(this.exam, this.questions){
+    countdownTime = exam.examTime*60;
   }
 
   StreamController<int> countdownController = StreamController<int>.broadcast();
@@ -59,12 +59,12 @@ class ExamViewModel {
     for (var question in questions) {
       int? selectedAnswerID = selectedAnswers[question.questionID];
       if (selectedAnswerID != null) {
-        AnswerModel selectedAnswer = question.answers.firstWhere(
+        AnswerModel selectedAnswer = question.answerOptions.firstWhere(
               (answer) => answer.answerID == selectedAnswerID,
-          orElse: () => AnswerModel(0, '', 0, question.questionID),
+          orElse: () => AnswerModel(answerID: 0, answerContent: '', answerCorrect: 0, questionID: question.questionID),
         );
         if (selectedAnswer.answerCorrect == 1) {
-          totalScore += question.questionScore;
+          totalScore += question.score;
         }
       }
     }

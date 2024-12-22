@@ -2,10 +2,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:english_learning_app/constrants/app_colors.dart';
 import 'package:english_learning_app/models/course_model.dart';
+import 'package:english_learning_app/models/reminder_model.dart';
+import 'package:english_learning_app/services/reminder_service.dart';
 import 'package:english_learning_app/view_model/my_course_viewmodel.dart';
 import 'package:english_learning_app/views/component/course_card.dart';
 import 'package:english_learning_app/views/component/section_header.dart';
 import 'package:english_learning_app/views/screens/student/course_detail_screen.dart';
+import 'package:english_learning_app/views/widget/dialog/show_join_course_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +24,37 @@ class _HomeStudentState extends State<HomeStudentScreen> {
 
   final TextEditingController _controller = TextEditingController();
   String _searchText = '';
+
+  final ReminderViewModel _viewModel = ReminderViewModel();
+  Reminder? _nextReminder;
   @override
   void initState() {
     super.initState();
+    _loadAllCourse();
+    _loadNextReminder();
+  }
+
+  Future<void> _loadNextReminder() async {
+    final reminders = await _viewModel.loadReminders();
+
+    if (reminders.isNotEmpty) {
+      reminders.sort((a, b) => a.time.compareTo(b.time)); // Sắp xếp theo thời gian
+      final now = DateTime.now();
+      final upcomingReminders =
+      reminders.where((r) => r.time.isAfter(now)).toList();
+
+      setState(() {
+        _nextReminder = upcomingReminders.isNotEmpty ? upcomingReminders.first : null;
+      });
+    }
+  }
+  void _loadAllCourse() {
     Future.microtask(() =>
         Provider.of<MyCourseViewmodel>(context, listen: false).fetchAllCourses());
   }
-
+  String _formatDateTime(DateTime dateTime) {
+    return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')} ngày ${dateTime.day}/${dateTime.month}/${dateTime.year}";
+  }
   final List<String> imgList = [
     'assets/images/image1.jpg',
     'assets/images/image2.jpg',
@@ -112,7 +139,7 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                       SizedBox(height: 12),
                       Container(
                         padding: EdgeInsets.all(16.0),
-                        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 6.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10.0),
@@ -130,60 +157,72 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                           children: [
                             // Title
                             Text(
-                              'Từ vựng của tôi',
+                              'Hoạt động tiếp theo',
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(height: 8.0),
 
-                            // Số lượng từ
-                            Text(
-                              'Số lượng từ: 120',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.grey[700],
-                              ),
-                            ),
                             SizedBox(height: 12.0),
 
-                            // Các từ tiêu biểu
-                            Text(
-                              'Từ tiêu biểu: học, nói, đọc, viết, từ điển',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.grey[700],
+                            Center(
+                              child: _nextReminder == null
+                                  ? Text(
+                                'Không có nhắc nhở nào sắp tới',
+                                style: TextStyle(fontSize: 18),
+                              )
+                                  : Container(
+                                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                                decoration: BoxDecoration(
+                                    border:
+                                    Border.all(color: Color(0xFF342771), width: 1.0),
+                                    borderRadius: BorderRadius.circular(8),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFF4F4F9),
+                                        Color(0xFF342771),
+                                      ],
+                                      stops: [0.96, 0],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    )),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Nhắc nhở: ${_nextReminder!.content}',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Thời gian: ${_formatDateTime(_nextReminder!.time)}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            SizedBox(height: 20.0),
-
-                            // Nút Luyện tập và Xem thêm
+                            SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 // Nút Luyện tập
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    // Thực hiện chức năng luyện tập
-                                  },
-                                  icon: Icon(Icons.fitness_center),
-                                  label: Text('Luyện tập', style: TextStyle(color: Colors.white),),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF0A0040), // Màu nền cho nút Luyện tập
-                                  ),
-                                ),
 
                                 // Nút Xem thêm
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/my-vocabulary');
+                                    Navigator.pushNamed(context, '/reminder');
                                   },
-                                  icon: Icon(Icons.chevron_right),
-                                  label: Text('Xem thêm'),
+                                  icon: Icon(Icons.chevron_right, color: AppColors.brightOrange,),
+                                  label: Text('Xem thêm', style: TextStyle(color: AppColors.brightOrange),),
                                   style: ElevatedButton.styleFrom(
-
+                                    backgroundColor: AppColors.darkPurpleBlue
                                   ),
                                 ),
                               ],
@@ -195,6 +234,7 @@ class _HomeStudentState extends State<HomeStudentScreen> {
 
                     ],
                   ),
+
                   SectionHeader("Khóa học thịnh hành"),
                   Container(
                     child: SizedBox(
@@ -261,7 +301,16 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                                   ],
                                 ),
                                 trailing: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    final result = await showDialog(
+                                      context: context,
+                                      builder: (context) => ShowJoinCourseDialog(course.courseID),
+                                    );
+                                    if (result != null && result['success'] == true) {
+                                      // Thực hiện reload sau khi tham gia
+                                      _loadAllCourse();
+                                    }
+                                  },
                                   child: Text('Tham gia', style: TextStyle(color: AppColors.lightGray, fontSize: 16),),
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.brightOrange,
@@ -271,9 +320,7 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                       )),
                                 ),
-                                onTap: () {
 
-                                },
                               ),
                             ),
                           );
@@ -281,14 +328,23 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                       ),
                     ),
                   )
-
                 ],
               ),
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Hành động khi bấm nút
+            Navigator.pushNamed(context, '/chat-ai');
+          },
+          backgroundColor: AppColors.brightOrange, // Màu nền nút
+          child: Icon(Icons.chat, color: Colors.white,), // Icon bên trong nút
+        ),
       ),
+
     );
   }
+
 }
 

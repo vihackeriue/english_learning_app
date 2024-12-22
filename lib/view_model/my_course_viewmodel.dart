@@ -84,4 +84,55 @@ class MyCourseViewmodel extends ChangeNotifier {
     }
   }
 
+  Future<void> joinCourse(
+     int courseId,
+     int studentCode,
+     String role,
+     String status,
+    BuildContext context) async {
+    final url = Uri.parse("${apiUrl}/user-courses/enroll");
+    final body = jsonEncode({
+      "courseId": courseId,
+      "studentCode": studentCode,
+      "role": role,
+      "status": status,
+    });
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // Lấy token từ SharedPreferences
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception("Token không tồn tại");
+      }
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Đăng ký thành công!");
+        Navigator.pop(context,{'success': true,});
+      } else {
+        final errorResponse = jsonDecode(response.body);
+        Navigator.pop(context,{'success': false,});
+        print("Đăng ký thất bại!");
+      }
+    } catch (e) {
+      print("Lỗi kết nối đến server: ${e.toString()}");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
 }

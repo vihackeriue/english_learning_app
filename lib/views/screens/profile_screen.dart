@@ -1,4 +1,5 @@
 import 'package:english_learning_app/constrants/app_colors.dart';
+import 'package:english_learning_app/view_model/login_viewmodel.dart';
 import 'package:english_learning_app/views/component/button_costom.dart';
 import 'package:english_learning_app/views/screens/profile_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ class _ProfileState extends State<ProfileScreen> {
   SharedPreferences? prefs;
   String? fullName;
 
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +34,7 @@ class _ProfileState extends State<ProfileScreen> {
     final String fullName = "Nguyen Van Vi";
     final String email= "Nguyen Van Vi";
     final String phone = "Nguyen Van Vi";
-
+    final LoginViewModel viewModel = LoginViewModel();
     return Scaffold(
 
       body: Container(
@@ -125,7 +127,9 @@ class _ProfileState extends State<ProfileScreen> {
                   SizedBox(height: 10,),
                   ButtonCustom("Giới thiệu", (){}),
                   SizedBox(height: 10,),
-                  ButtonCustom("Đăng Xuất", (){}),
+                  ButtonCustom("Đăng Xuất", (){
+                    viewModel.logout(context);
+                  }),
                   SizedBox(height: 100,),
                 ],
               ),

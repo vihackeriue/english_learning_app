@@ -29,16 +29,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             Text("Họ Và Tên",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkBlueBlack),),
             SizedBox(height: 10,),
             Container(
-
               margin: EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.deepPurpleBlue
-              ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.deepPurpleBlue,
+                    width: 1.5,
+                  )),
               padding: EdgeInsets.all(16),
               child: Text(
                 '$fullName',
-                style: TextStyle(fontSize: 18, color: AppColors.lightGray),
+                style: TextStyle(fontSize: 18, color: AppColors.darkBlueBlack),
               ),
             ),
 
@@ -46,16 +47,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             Text("Email",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkBlueBlack),),
             SizedBox(height: 10,),
             Container(
-
               margin: EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: AppColors.deepPurpleBlue
-              ),
+                  border: Border.all(
+                    color: AppColors.deepPurpleBlue,
+                    width: 1.5,
+                  )),
               padding: EdgeInsets.all(16),
               child: Text(
                 '$email',
-                style: TextStyle(fontSize: 18, color: AppColors.lightGray),
+                style: TextStyle(fontSize: 18, color: AppColors.darkBlueBlack),
               ),
             ),
 
@@ -67,12 +69,19 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               margin: EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: AppColors.deepPurpleBlue
+
+                  border: Border.all(
+                      color: AppColors.deepPurpleBlue,
+                    width: 1.5,
+                  )
+
+
               ),
+
               padding: EdgeInsets.all(16),
               child: Text(
                 '$phone',
-                style: TextStyle(fontSize: 18, color: AppColors.lightGray),
+                style: TextStyle(fontSize: 18, color: AppColors.darkBlueBlack),
               ),
             ),
             Padding(

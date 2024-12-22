@@ -4,7 +4,9 @@ import 'package:english_learning_app/models/lesson_model.dart';
 import 'package:english_learning_app/view_model/lesson_viewmodel.dart';
 import 'package:english_learning_app/views/screens/student/exam_screen.dart';
 import 'package:english_learning_app/views/screens/student/lesson_screen.dart';
+import 'package:english_learning_app/views/widget/tab/exam_list_tab.dart';
 import 'package:english_learning_app/views/widget/tab/lesson_list_tab.dart';
+import 'package:english_learning_app/views/widget/tab/statistics_score_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -27,7 +29,7 @@ class _CourseDetailState extends State<CourseDetailScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
 
@@ -61,6 +63,7 @@ class _CourseDetailState extends State<CourseDetailScreen> with SingleTickerProv
           tabs: [
             Tab(text: 'Bài học'),
             Tab(text: 'Bài thi'),
+            Tab(text: 'Thống kê'),
           ],
         ),
         backgroundColor: AppColors.darkBlueBlack,
@@ -70,60 +73,12 @@ class _CourseDetailState extends State<CourseDetailScreen> with SingleTickerProv
         controller: _tabController,
         children: [
           LessonListTab(widget.courseId),
-          ExamTab(),
+          ExamListTab(widget.courseId),
+          StatisticsScoreTab(widget.courseId),
         ],
       ),
     );
   }
 }
-class ExamTab extends StatelessWidget {
-  // Danh sách các bài thi mẫu
-  final List<ExamModel> exams = ExamModel.sampleExams;
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: exams.length,
-      itemBuilder: (context, index) {
-        final exam = exams[index]; // Lấy bài thi tại vị trí index
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ExamScreen(exam), // Chuyển đến màn hình thi
-              ),
-            );
-          },
-          child: Card(
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.school, color: Colors.blue), // Icon của môn học
-                      SizedBox(width: 8),
-                      Text(
-                        'Tên bài thi: ${exam.examName}', // Hiển thị tên bài thi
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text('Cấp độ: ${exam.level == 1 ? "Dễ" : exam.level == 2 ? "Trung bình" : "Khó"}'),
-                  Text('Thời gian: ${exam.examTime}'),
-                  Text('Ngày hết hạn: ${exam.examDate}'),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
 

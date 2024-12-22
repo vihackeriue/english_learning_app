@@ -1,5 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -11,6 +13,7 @@ class StatisticsScreen extends StatefulWidget {
 class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body:SafeArea(
           child: Container(
@@ -24,7 +27,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Container(),
+            child: Container()
 
           )
       ),
