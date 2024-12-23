@@ -54,7 +54,7 @@ class _ExamScreenState extends State<ExamScreen> {
               viewModel.calculateScore();
               ExamDetailViewmodel examDetailViewmodel = new ExamDetailViewmodel();
               print(viewModel.totalScore);
-              await examDetailViewmodel.updateScore(widget.exam.examID, viewModel.totalScore, 1, '');
+              await examDetailViewmodel.updateScore(widget.exam.examID, viewModel.totalScore, 0, '');
               Navigator.pop(context, true);
             },
             child: Text('Nộp bài'),

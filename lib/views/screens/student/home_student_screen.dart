@@ -217,7 +217,10 @@ class _HomeStudentState extends State<HomeStudentScreen> {
                                 // Nút Xem thêm
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/reminder');
+                                    Navigator.pushNamed(context, '/reminder').then((_) {
+                                      // Khi quay lại màn hình, tải lại dữ liệu
+                                      _loadNextReminder();
+                                    });
                                   },
                                   icon: Icon(Icons.chevron_right, color: AppColors.brightOrange,),
                                   label: Text('Xem thêm', style: TextStyle(color: AppColors.brightOrange),),
